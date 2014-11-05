@@ -61,4 +61,9 @@
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="effect.fx">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

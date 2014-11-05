@@ -2,17 +2,31 @@
 #include <Mmsystem.h>
 
 #include "d3dutil.h"
+#include "xnamath.h"
+
+//--------------------------------------------------------------------------------------
+// Structures
+//--------------------------------------------------------------------------------------
+struct SimpleVertex
+{
+  XMFLOAT3 Pos;
+};
+
+HWND g_Hwnd = NULL;
+IDXGISwapChain* g_SwapChain = NULL;
+ID3D11Device* g_D3D11Device = NULL;
+D3D_FEATURE_LEVEL g_featureLevel;
+ID3D11DeviceContext* g_deviceContext = NULL;
+ID3D11RenderTargetView* g_RTView = NULL;
+ID3D11VertexShader* g_pVSShader = NULL;
+ID3D11InputLayout* g_pInputLayout = NULL;
+ID3D11PixelShader* g_pPSShader = NULL;
+ID3D11Buffer* g_vertexBuffer = NULL;
 
 namespace d3d
 {
-  HWND g_Hwnd = NULL;
-  IDXGISwapChain* g_SwapChain = NULL;
-  ID3D11Device* g_D3D11Device = NULL;
-  D3D_FEATURE_LEVEL g_featureLevel;
-  ID3D11DeviceContext* g_deviceContext = NULL;
-  ID3D11RenderTargetView* g_RTView = NULL;
 
-  bool InitD3D11(HINSTANCE hInstance, HWND hwnd, int width, int height, bool windowed)
+  HRESULT InitD3D11(HINSTANCE hInstance, HWND hwnd, int width, int height, bool windowed)
   {
     HRESULT hr = S_OK;
     
@@ -90,13 +104,102 @@ namespace d3d
     // Change Window Proc
     SetWindowLongPtr(hwnd, GWL_WNDPROC, (LONG)WndProc);
 
-    return true;
+    // Compile the vertex shader.
+    ID3DBlob* pVSBlob = NULL;
+    hr = CompileShaderFromFile(L"effect.fx", "VS", "vs_4_0", &pVSBlob);
+    if (FAILED(hr))
+    {
+      MessageBox(NULL, L"The fx file can't be compiled.", NULL, NULL);
+      return hr;
+    }
+
+    // Create the vertex shader
+    hr = g_D3D11Device->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), NULL,
+      &g_pVSShader);
+    if (FAILED(hr))
+    {
+      Release(pVSBlob);
+      return hr;
+    }
+
+    // Define the input layout
+    D3D11_INPUT_ELEMENT_DESC layout[] =
+    {
+      { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+    };
+
+    UINT numElements = ARRAYSIZE(layout);
+
+    // Create the input layout
+    hr = g_D3D11Device->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(),
+      pVSBlob->GetBufferSize(), &g_pInputLayout);
+    Release(pVSBlob);
+    if (FAILED(hr))
+    {
+      return hr;
+    }
+
+    // Set the input layout
+    g_deviceContext->IASetInputLayout(g_pInputLayout);
+
+    // Compile the ps shader
+    ID3DBlob* pPSBlob = NULL;
+    hr = CompileShaderFromFile(L"effect.fx", "PS", "ps_4_0", &pPSBlob);
+    if (FAILED(hr))
+    {
+      MessageBox(NULL, L"the fx file can't be compiled", NULL, NULL);
+      return hr;
+    }
+
+    // Create the pixel shader
+    hr = g_D3D11Device->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(),
+      NULL, &g_pPSShader);
+    Release(pPSBlob);
+    if (FAILED(hr))
+      return hr;
+
+    // Create vertex buffer
+    SimpleVertex vertices[] =
+    {
+      XMFLOAT3(0.0f, 0.5f, 0.5f),
+      XMFLOAT3(0.5f, -0.5f, 0.5f),
+      XMFLOAT3(-0.5f, -0.5f, 0.5f),
+    };
+
+    D3D11_BUFFER_DESC bd;
+    ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
+    bd.Usage = D3D11_USAGE_DEFAULT;
+    bd.ByteWidth = sizeof(SimpleVertex)* 3;
+    bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    bd.CPUAccessFlags = 0;
+    D3D11_SUBRESOURCE_DATA InitData;
+    ZeroMemory(&InitData, sizeof(InitData));
+    InitData.pSysMem = vertices;
+    hr = g_D3D11Device->CreateBuffer(&bd, &InitData, &g_vertexBuffer);
+    if (FAILED(hr))
+      return hr;
+
+    // Set Vertex buffer
+    UINT stride = sizeof(SimpleVertex);
+    UINT offset = 0;
+    g_deviceContext->IASetVertexBuffers(0, 1, &g_vertexBuffer, &stride, &offset);
+
+    // Set primitive topology
+    g_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    return S_OK;
   }
 
   void Render(float deltaTime)
   {
     float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f };
     g_deviceContext->ClearRenderTargetView(g_RTView, ClearColor);
+
+    // render a triangle
+    g_deviceContext->VSSetShader(g_pVSShader, NULL, 0);
+    g_deviceContext->PSSetShader(g_pPSShader, NULL, 0);
+    g_deviceContext->Draw(3, 0);
+
     g_SwapChain->Present(0, 0);
   }
 
@@ -104,6 +207,31 @@ namespace d3d
   {
     if (g_deviceContext)
       g_deviceContext->ClearState();
+
+    if (g_pVSShader)
+    {
+      Release(g_pVSShader);
+      g_pVSShader = NULL;
+    }
+
+    if (g_pPSShader)
+    {
+      Release(g_pPSShader);
+      g_pPSShader = NULL;
+    }
+
+    if (g_pInputLayout)
+    {
+      Release(g_pInputLayout);
+      g_pInputLayout = NULL;
+    }
+
+    if (g_vertexBuffer)
+    {
+      Release(g_vertexBuffer);
+      g_vertexBuffer = NULL;
+    }
+
     if (g_RTView)
     {
       Release(g_RTView);
@@ -171,6 +299,38 @@ namespace d3d
       }
       ptr_display(deltaTime);
     }
+  }
+
+  HRESULT CompileShaderFromFile(wchar_t* szFileName, LPCSTR szEntryPoint,
+    LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
+  {
+    HRESULT hr = S_OK;
+
+    DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
+#if defined( DEBUG ) || defined ( _DEBUG )
+    // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
+    // Setting this flag improves the shader debugging experience, but still allows 
+    // the shaders to be optimized and to run exactly the way they will run in 
+    // the release configuration of this program.
+    dwShaderFlags |= D3DCOMPILE_DEBUG;
+#endif
+
+    ID3DBlob* pErrorBlob;
+    hr = D3DX11CompileFromFile(szFileName, NULL, NULL, szEntryPoint, szShaderModel,
+      dwShaderFlags, 0, NULL, ppBlobOut, &pErrorBlob, NULL);
+    if (FAILED(hr))
+    {
+      if (pErrorBlob != NULL)
+        OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
+      if (pErrorBlob)
+        pErrorBlob->Release();
+      return hr;
+    }
+
+    if (pErrorBlob)
+      pErrorBlob->Release();
+
+    return S_OK;
   }
 
 } // namespace d3d
