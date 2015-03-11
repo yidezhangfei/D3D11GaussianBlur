@@ -30,6 +30,9 @@ namespace d3d
   HRESULT CompileShaderFromFile(wchar_t* szFileName, LPCSTR szEntryPoint,
     LPCSTR szShaderModel, ID3DBlob** ppBlobOut);
 
+  HRESULT CompileShaderFromMemory(LPCSTR shaderSrcData, LPCSTR szEntryPoint,
+      LPCSTR szShaderModel, ID3DBlob** ppBlobOut);
+
   template<class T> void Release(T t)
   {
     if (t)

@@ -35,13 +35,33 @@ cbuffer cbRadius : register (b2)
   uint radius;
 };
 
+// matrix
+
+cbuffer cbWorldMatrix : register (b3)
+{
+  matrix World;
+};
+
+cbuffer cbViewMatrix : register (b4)
+{
+  matrix View;
+};
+
+cbuffer cbProjection : register (b5)
+{
+  matrix Projection;
+};
+
 //--------------------------------------------------------------------------------------
 // Vertex Shader
 //--------------------------------------------------------------------------------------
 PS_INPUT VS(VS_INPUT input)
 {
   PS_INPUT output = (PS_INPUT)0;
-  output.Pos = input.Pos;
+  output.Pos = mul(input.Pos, World);
+  output.Pos = mul(output.Pos, View);
+  output.Pos = mul(output.Pos, Projection);
+//  output.Pos = input.Pos;
   output.Tex = input.Tex;
 
   return output;
@@ -58,8 +78,9 @@ float4 PS(PS_INPUT input) : SV_Target
   static float SampleWeightsFloat[176] = (float[176])SampleWeights;
   
   //return texDiffuse.Sample(samLinear, input.Tex);
-  
-  for (uint k = 0; k < 49; k++)
+  uint diameter = radius * 2 + 1;
+  uint size = diameter * diameter;
+  for (uint k = 0; k < size; k++)
   {
     color += texDiffuse.Sample(samLinear, input.Tex + SampleOffsetsFloat[k]) * SampleWeightsFloat[k];
   }

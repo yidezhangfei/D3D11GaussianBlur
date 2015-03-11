@@ -1,4 +1,4 @@
-﻿Build started 2014/11/11 13:04:32.
+﻿Build started 2014/11/26 18:21:20.
      1>Project "H:\gauss\D3D11GaussianBlur\D3D10GaussianBlur\D3D10GaussianBlur.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USE_MATH_DEFINES /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\D3D10GaussianBlur.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt d3dutil.cpp
@@ -117,17 +117,23 @@
                  c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50398) : see previous definition of 'D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS'
      1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\d3d11.h(920): warning C4005: 'D3D11_ERROR_DEFERRED_CONTEXT_MAP_WITHOUT_INITIAL_DISCARD' : macro redefinition
                  c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50407) : see previous definition of 'D3D11_ERROR_DEFERRED_CONTEXT_MAP_WITHOUT_INITIAL_DISCARD'
-     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(68): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
-     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(83): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
-     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(84): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
-     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(117): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
-     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(118): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
-     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(502): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(527): warning C4244: '=' : conversion from 'double' to 'UINT', possible loss of data
-     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(540): warning C4244: '=' : conversion from 'double' to 'UINT', possible loss of data
-     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(549): warning C4244: '=' : conversion from 'double' to 'UINT', possible loss of data
+     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(150): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(166): warning C4305: 'initializing' : truncation from 'double' to 'float'
+     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(167): warning C4305: 'initializing' : truncation from 'double' to 'float'
+     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(200): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(201): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(353): warning C4244: 'argument' : conversion from 'double' to 'FLOAT', possible loss of data
+     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(355): warning C4244: 'argument' : conversion from 'double' to 'FLOAT', possible loss of data
+     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(801): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(802): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(865): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(890): warning C4244: '=' : conversion from 'double' to 'UINT', possible loss of data
+     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(903): warning C4244: '=' : conversion from 'double' to 'UINT', possible loss of data
+     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(912): warning C4244: '=' : conversion from 'double' to 'UINT', possible loss of data
+     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(339): warning C4715: 'd3d::SetInputLayout' : not all control paths return a value
+     1>h:\gauss\d3d11gaussianblur\d3d10gaussianblur\d3dutil.cpp(392): warning C4715: 'd3d::CreateMeshAndSetVetexBuffer' : not all control paths return a value
        Link:
-         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"H:\gauss\D3D11GaussianBlur\Debug\D3D10GaussianBlur.exe" /INCREMENTAL /NOLOGO Winmm.lib d3d11.lib d3dx11.lib Windowscodecs.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"H:\gauss\D3D11GaussianBlur\Debug\D3D10GaussianBlur.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"H:\gauss\D3D11GaussianBlur\Debug\D3D10GaussianBlur.lib" /MACHINE:X86 Debug\D3D10GaussianBlur.res
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"H:\gauss\D3D11GaussianBlur\Debug\D3D10GaussianBlur.exe" /INCREMENTAL /NOLOGO Winmm.lib d3d11.lib d3dx11.lib Windowscodecs.lib D3dcompiler.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"H:\gauss\D3D11GaussianBlur\Debug\D3D10GaussianBlur.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"H:\gauss\D3D11GaussianBlur\Debug\D3D10GaussianBlur.lib" /MACHINE:X86 Debug\D3D10GaussianBlur.res
          Debug\D3D10GaussianBlur.obj
          Debug\d3dutil.obj
          Debug\stdafx.obj
@@ -136,4 +142,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.80
+Time Elapsed 00:00:01.28
